@@ -1,0 +1,32 @@
+================================================================================
+AUDIT REPORT: DOCS MODULES
+GENERATED:    2026-04-18 12:37
+PATH:         C:\Users\georg\Documents\ABRS_Market_Research_Agent.worktrees\copilot-worktree-2026-04-07T11-40-34\abrs\Schwabdev\docs
+================================================================================
+
+MODULE SUMMARY
+------------------------------
+Module                         | Lines  | Modified
+------------------------------
+compile-docs.py                | 56     | 2026-04-08 21:42
+
+--------------------------------------------------------------------------------
+
+## MODULE: compile-docs.py
+
+  [HOW IT WORKS]
+  Convert all .md files in pages-raw/ to .html files in pages/
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Functions: convert_markdown_to_html, process_folder
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     1,469 bytes
+----------------------------------------

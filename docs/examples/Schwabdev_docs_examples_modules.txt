@@ -1,0 +1,90 @@
+================================================================================
+AUDIT REPORT: EXAMPLES MODULES
+GENERATED:    2026-04-18 12:37
+PATH:         C:\Users\georg\Documents\ABRS_Market_Research_Agent.worktrees\copilot-worktree-2026-04-07T11-40-34\abrs\Schwabdev\docs\examples
+================================================================================
+
+MODULE SUMMARY
+------------------------------
+Module                         | Lines  | Modified
+------------------------------
+api_demo.py                    | 152    | 2026-04-08 21:42
+async_api_calls.py             | 28     | 2026-04-08 21:42
+playground.py                  | 33     | 2026-04-08 21:42
+stream_demo.py                 | 90     | 2026-04-08 21:42
+
+--------------------------------------------------------------------------------
+
+## MODULE: api_demo.py
+
+  [HOW IT WORKS]
+  This file contains examples for every api call.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     4,939 bytes
+----------------------------------------
+
+## MODULE: async_api_calls.py
+
+  [HOW IT WORKS]
+  Example of making concurrent asynchronous API calls to get quotes for multiple tickers.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Functions: main
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     797 bytes
+----------------------------------------
+
+## MODULE: playground.py
+
+  [HOW IT WORKS]
+  !!! Run this file with `python -i playground.py` !!! It allows you to enter python code to test the api without restarting the whole program.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     1,248 bytes
+----------------------------------------
+
+## MODULE: stream_demo.py
+
+  [HOW IT WORKS]
+  This file contains examples for stream requests.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Functions: main
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     3,995 bytes
+----------------------------------------

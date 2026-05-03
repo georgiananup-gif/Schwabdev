@@ -1,0 +1,230 @@
+================================================================================
+AUDIT REPORT: EXTRA MODULES
+GENERATED:    2026-04-18 12:37
+PATH:         C:\Users\georg\Documents\ABRS_Market_Research_Agent.worktrees\copilot-worktree-2026-04-07T11-40-34\abrs\Schwabdev\docs\examples\extra
+================================================================================
+
+MODULE SUMMARY
+------------------------------
+Module                         | Lines  | Modified
+------------------------------
+api_gui_demo.py                | 998    | 2026-04-08 21:42
+async_api_demo_parsed.py       | 177    | 2026-04-08 21:42
+async_playground.py            | 63     | 2026-04-08 21:42
+async_stream_demo.py           | 89     | 2026-04-08 21:42
+capture_callback.py            | 143    | 2026-04-08 21:42
+charting.py                    | 120    | 2026-04-08 21:42
+concurrent_stream_calls.py     | 42     | 2026-04-08 21:42
+encrypted_db_setup.py          | 35     | 2026-04-08 21:42
+processing_streaming_data.py   | 64     | 2026-04-08 21:42
+template.py                    | 26     | 2026-04-08 21:42
+translating_stream.py          | 95     | 2026-04-08 21:42
+
+--------------------------------------------------------------------------------
+
+## MODULE: api_gui_demo.py
+
+  [HOW IT WORKS]
+  Tkinter GUI demo for Schwabdev (Unofficial Schwab API Python Wrapper) Requirements: pip install schwabdev python-dotenv Environment: Create a .env file in the same directory with: app_key=YOUR_APP_KEY app_secret=YOUR_APP_SECRET callback_url=YOUR_CALLBACK_URL
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Classes:   SchwabGuiApp
+    Functions: default_days_back, now_utc, main
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     33,570 bytes
+----------------------------------------
+
+## MODULE: async_api_demo_parsed.py
+
+  [HOW IT WORKS]
+  async_api_demo_parsed.py - no docstring available.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Functions: main
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     5,983 bytes
+----------------------------------------
+
+## MODULE: async_playground.py
+
+  [HOW IT WORKS]
+  !!! Run this file with `python -i playground.py` !!! It allows you to enter python code to test the api without restarting the whole program.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Functions: run
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     2,063 bytes
+----------------------------------------
+
+## MODULE: async_stream_demo.py
+
+  [HOW IT WORKS]
+  This file contains examples for stream requests.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Functions: main
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     3,784 bytes
+----------------------------------------
+
+## MODULE: capture_callback.py
+
+  [HOW IT WORKS]
+  This is an example of an injected callback capture server for Schwabdev's authentication process (no copy/pasting URLs during auth). You must have a free port in your callback URL such as `https://127.0.0.1:7777`. The browser will say that the connection is not secure (e.g. net::ERR_CERT_AUTHORITY_INVALID) because it is using a self-signed certificate, though this is fine because it is a local connection.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     6,147 bytes
+----------------------------------------
+
+## MODULE: charting.py
+
+  [HOW IT WORKS]
+  Example of real-time charting of streaming market data using Matplotlib.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Functions: response_handler, consumer_loop
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     3,694 bytes
+----------------------------------------
+
+## MODULE: concurrent_stream_calls.py
+
+  [HOW IT WORKS]
+  Example of making concurrent stream requests.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Functions: main
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     1,209 bytes
+----------------------------------------
+
+## MODULE: encrypted_db_setup.py
+
+  [HOW IT WORKS]
+  This example demonstrates how to set up an encrypted database for storing tokens using Schwabdev.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     1,641 bytes
+----------------------------------------
+
+## MODULE: processing_streaming_data.py
+
+  [HOW IT WORKS]
+  This file is an example of how to process streaming data. While you can process completely in the response handler this could leave the stream with a backlog. The preferred method is to use a shared list, shown here as "shared_list"
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Functions: response_handler
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     2,453 bytes
+----------------------------------------
+
+## MODULE: template.py
+
+  [HOW IT WORKS]
+  Schwabdev Template Example
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     864 bytes
+----------------------------------------
+
+## MODULE: translating_stream.py
+
+  [HOW IT WORKS]
+  Example of translating field numbers to field names in a streaming response.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Functions: translate_data, translate_field
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     3,084 bytes
+----------------------------------------

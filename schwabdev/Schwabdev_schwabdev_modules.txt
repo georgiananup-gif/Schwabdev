@@ -1,0 +1,113 @@
+================================================================================
+AUDIT REPORT: SCHWABDEV MODULES
+GENERATED:    2026-04-18 12:37
+PATH:         C:\Users\georg\Documents\ABRS_Market_Research_Agent.worktrees\copilot-worktree-2026-04-07T11-40-34\abrs\Schwabdev\schwabdev
+================================================================================
+
+MODULE SUMMARY
+------------------------------
+Module                         | Lines  | Modified
+------------------------------
+client.py                      | 1176   | 2026-04-08 21:42
+enums.py                       | 11     | 2026-04-08 21:42
+stream.py                      | 713    | 2026-04-08 21:42
+tokens.py                      | 443    | 2026-04-08 21:42
+translate.py                   | 66     | 2026-04-08 21:42
+
+--------------------------------------------------------------------------------
+
+## MODULE: client.py
+
+  [HOW IT WORKS]
+  Schwabdev Client & ClientAsync Module. For connecting to the Schwab API. https://github.com/tylerebowers/Schwab-API-Python
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Classes:   ClientBase, Client, ClientAsync
+
+  [DEPENDENCIES]
+    Third-Party: requests
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     53,440 bytes
+----------------------------------------
+
+## MODULE: enums.py
+
+  [HOW IT WORKS]
+  enums.py - no docstring available.
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Classes:   TimeFormat
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     194 bytes
+----------------------------------------
+
+## MODULE: stream.py
+
+  [HOW IT WORKS]
+  Schwabdev Stream & StreamAsync Module. For streaming data from Schwab Streamer API. https://github.com/tylerebowers/Schwab-API-Python
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Classes:   StreamBase, Stream, StreamAsync
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     32,648 bytes
+----------------------------------------
+
+## MODULE: tokens.py
+
+  [HOW IT WORKS]
+  Schwabdev Tokens Module. Manages Schwab OAuth tokens including storage, retrieval, and refreshing. https://github.com/tylerebowers/Schwab-API-Python
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+    Classes:   Tokens
+
+  [DEPENDENCIES]
+    Third-Party: requests
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     19,546 bytes
+----------------------------------------
+
+## MODULE: translate.py
+
+  [HOW IT WORKS]
+  Schwabdev Stream Field Mappings. Used to translate field numbers to field names. https://github.com/tylerebowers/Schwab-API-Python
+
+  [APPLICATION]
+  See source for implementation details.
+
+  [SYMBOLS]
+
+  [DEPENDENCIES]
+
+  [METADATA]
+    Created:  2026-04-08 21:42
+    Modified: 2026-04-08 21:42
+    Size:     6,408 bytes
+----------------------------------------
