@@ -19,7 +19,7 @@ class ClientBase:
 
     _base_api_url = "https://api.schwabapi.com"
 
-    def __init__(self, app_key, app_secret, callback_url="https://127.0.0.1", tokens_db="~/.schwabdev/tokens.db", encryption=None, timeout=10, call_on_auth=None):
+    def __init__(self, app_key, app_secret, callback_url="https://127.0.0.1", tokens_db="~/.schwabdev/tokens.db", encryption=None, timeout=10, call_on_auth=None, open_browser_for_auth=True):
         """
         Initialize a client to access the Schwab API.
 
@@ -30,17 +30,17 @@ class ClientBase:
             tokens_db (str): Path to tokens file.
             timeout (int): Request timeout in seconds - how long to wait for a response.
             use_session (bool): Use a requests session for requests instead of creating a new session for each request.
-            call_on_notify (function | None): Function to call when user needs to be notified (e.g. for input)
+            call_on_auth (function | None): Function to call for authentication (see docs)
         """
 
         # other checks are done in the tokens class
         if timeout <= 0:
             raise Exception("Timeout must be greater than 0 and is recommended to be 5 seconds or more.")
 
-        self.timeout = timeout                                              # timeout to use in requests
+        self.timeout = timeout # timeout to use in requests
         self.logger = logging.getLogger("Schwabdev")  # init the logger
-        self.tokens = Tokens(app_key, app_secret, callback_url, self.logger, tokens_db, encryption, call_on_auth)
-        self.tokens.update_tokens()                                               # ensure tokens are up to date on init
+        self.tokens = Tokens(app_key, app_secret, callback_url, self.logger, tokens_db, encryption, call_on_auth, open_browser_for_auth)
+        self.tokens.update_tokens() # ensure tokens are up to date on init
 
     def _parse_params(self, params: dict):
         """
@@ -120,7 +120,7 @@ class ClientBase:
 
 class Client(ClientBase):
 
-    def __init__(self, app_key:str, app_secret:str, callback_url:str="https://127.0.0.1", tokens_db: str="~/.schwabdev/tokens.db", encryption:str=None, timeout:int=10, call_on_auth:callable=None):
+    def __init__(self, app_key:str, app_secret:str, callback_url:str="https://127.0.0.1", tokens_db: str="~/.schwabdev/tokens.db", encryption:str=None, timeout:int=10, call_on_auth:callable=None, open_browser_for_auth:bool=True):
         """
         Initialize a client to access the Schwab API.
 
@@ -131,8 +131,9 @@ class Client(ClientBase):
             tokens_db (str): Path to tokens file.
             timeout (int): Request timeout in seconds - how long to wait for a response.
             call_on_auth (function | None): Function to call for custom auth flow.
+            open_browser_for_auth (bool): Whether to open the browser for authentication.
         """
-        super().__init__(app_key, app_secret, callback_url, tokens_db, encryption, timeout, call_on_auth)
+        super().__init__(app_key, app_secret, callback_url, tokens_db, encryption, timeout, call_on_auth, open_browser_for_auth)
 
         self._session = requests.Session()                                  # session to use in requests
         self._session.headers.update({'Authorization': f'Bearer {self.tokens.access_token}'})
@@ -576,10 +577,10 @@ class Client(ClientBase):
 
 class ClientAsync(ClientBase):
 
-    def __init__(self, app_key:str, app_secret:str, callback_url:str="https://127.0.0.1", tokens_db: str="~/.schwabdev/tokens.db", encryption:str=None, timeout:int=10, call_on_auth:callable=None, parsed: bool = False,):
+    def __init__(self, app_key:str, app_secret:str, callback_url:str="https://127.0.0.1", tokens_db: str="~/.schwabdev/tokens.db", encryption:str=None, timeout:int=10, call_on_auth:callable=None, open_browser_for_auth:bool=True, parsed: bool = False):
         if aiohttp is None:
             raise ImportError("aiohttp is required to use ClientAsync")
-        super().__init__(app_key, app_secret, callback_url, tokens_db, encryption, timeout, call_on_auth)
+        super().__init__(app_key, app_secret, callback_url, tokens_db, encryption, timeout, call_on_auth, open_browser_for_auth)
         self._parsed = parsed
         self._session = aiohttp.ClientSession(base_url=self._base_api_url,
                                               headers={'Authorization': f'Bearer {self.tokens.access_token}'}, 

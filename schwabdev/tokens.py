@@ -7,7 +7,6 @@ import base64
 import datetime
 import logging
 import os
-import webbrowser
 import sqlite3
 import requests
 import urllib.parse
@@ -17,7 +16,7 @@ from cryptography.fernet import Fernet
 _ENC_PREFIX = "enc:"
 
 class Tokens:
-    def __init__(self,app_key: str, app_secret: str, callback_url: str, logger: logging.Logger, tokens_db: str="~/.schwabdev/tokens.db", encryption: str=None, call_for_auth=None):
+    def __init__(self,app_key: str, app_secret: str, callback_url: str, logger: logging.Logger, tokens_db: str="~/.schwabdev/tokens.db", encryption: str=None, call_for_auth: callable=None, open_browser_for_auth: bool=True):
         """
         Initialize a tokens manager
 
@@ -38,8 +37,8 @@ class Tokens:
             raise ValueError("[Schwabdev] callback_url cannot be None.")
         if not tokens_db:
             raise ValueError("[Schwabdev] tokens_db cannot be None.")
-        if len(app_key) not in (32, 48) or len(app_secret) not in (16, 64):
-            raise ValueError("[Schwabdev] App key or app secret invalid length.")
+        if len(app_key) % 2 != 0 or len(app_secret) % 2 != 0 or len(app_key) + len(app_secret) < 32: # Schwab has several variations of key/secret lengths but they are always even and combined at least 32 chars.
+            raise ValueError("[Schwabdev] App key or app secret likely invalid.")
         if not callback_url.startswith("https"):
             raise ValueError("[Schwabdev] callback_url must be https.")
         if callback_url.endswith("/"):
@@ -63,6 +62,7 @@ class Tokens:
         self._refresh_token_issued = datetime.datetime.min.replace(tzinfo=datetime.timezone.utc) # datetime of refresh token issue
         self._access_token_timeout = 30 * 60                # in seconds (30 min from schwab)
         self._refresh_token_timeout = 7 * 24 * 60 * 60      # in seconds (7 days from schwab)
+        self._open_browser_for_auth = open_browser_for_auth  # open browser for auth
         self._logger = logger                               # logger
         self._call_for_auth = call_for_auth                 # function to call for custom auth
         self._cipher_suite = Fernet(encryption) if (encryption and len(encryption) > 16) else None # encryption suite for tokens
@@ -320,12 +320,12 @@ class Tokens:
                 self._cur.execute("BEGIN EXCLUSIVE") # begin early and hold throughout all db/http to limit to one new access token across instances.
             except sqlite3.Error as e:
                 self._logger.error(f"[Schwabdev] Could not begin exclusive transaction ({e})")
-                return
+                return False
             self._load_tokens_from_db()
             if self._access_token_issued > last_known_at_issued and not overwrite:
                 self._logger.info(f"Access token updated elsewhere at {self._access_token_issued}.")
                 self._conn.rollback() # release exclusive
-                return
+                return True
 
             committed = False
 
@@ -336,19 +336,20 @@ class Tokens:
                 except requests.RequestException as e:
                     self._logger.error(f"[Schwabdev] Could not update access token (network error: {e})")
                     self._conn.rollback()  # release lock, no write performed
-                    return
+                    return False
                 if response.ok:
                     committed = self._set_tokens(now, self._refresh_token_issued, response.json())
                     self._logger.info(f"Access token updated at {self._access_token_issued}")
                 else:
                     self._logger.error(f"Could not get new access token; refresh_token likely invalid. ({response.text})")
                     self._conn.rollback()  # release lock, no write performed
-                    return
+                    return False
             except Exception as e:
                 self._logger.error(f"[Schwabdev] Could not update access token ({e})")
             finally:
                 if not committed:
                     self._conn.rollback()
+            return True
 
 
     """
@@ -400,19 +401,19 @@ class Tokens:
                 if last_known_rt_issued < now: # refresh token is invalid, is access token?
                     if self._access_token_issued < now: # refresh and access tokens are invalid.
                         self._logger.critical(f"Refresh token and Access token are invalid, couldn't get db lock ({e}).")
-                        return
+                        return False
                         #raise Exception("Refresh token and Access token are invalid, couldn't get db lock, cannot continue.")
                     else:
                         self._logger.warning("Access token valid, Refresh token invalid")
-                        return
+                        return False
                 else:
-                    return # still have time left (<30min), assume other client is updating.
+                    return False # still have time left (<30min), assume other client is updating.
             
             self._load_tokens_from_db()
             if self._refresh_token_issued > last_known_rt_issued and not overwrite:
                 self._logger.info(f"Refresh token updated elsewhere at {self._refresh_token_issued}.")
                 self._conn.rollback() # release exclusive
-                return
+                return True
 
             auth_url = f'https://api.schwabapi.com/v1/oauth/authorize?client_id={self._app_key}&redirect_uri={self._callback_url}'
 
@@ -421,11 +422,13 @@ class Tokens:
                 auth_callback = self._call_for_auth(auth_url)
             else:
                 print(f"[Schwabdev] Open to authenticate: {auth_url}")
-                try:
-                    webbrowser.open(auth_url)
-                except Exception as e:
-                    self._logger.error(e)
-                    self._logger.warning("Could not open browser for authorization (open the link manually)")
+                if self._open_browser_for_auth:
+                    try:
+                        import webbrowser
+                        webbrowser.open(auth_url)
+                    except Exception as e:
+                        self._logger.error(e)
+                        self._logger.warning("Could not open browser for authorization (open the link manually)")
 
                 # parse the callback url
             
@@ -434,10 +437,11 @@ class Tokens:
                 if len(auth_callback) < len(self._callback_url):
                     self._logger.error("No authorization URL provided, cannot continue.")
                     self._conn.rollback()
-                    return
+                    return False
 
             if self._set_tokens(now, now, _get_new_tokens(auth_callback)):
                 self._logger.info(f"Tokens updated at {now}")
+                return True
             else:
                 self._conn.rollback()
-
+                return False

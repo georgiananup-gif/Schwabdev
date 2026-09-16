@@ -65,15 +65,15 @@ class StreamBase:
 
             try:
                 self._streamer_info = self._get_streamer_info()
+                if self._streamer_info is None:
+                    self._logger.warning("Streamer info is None, cannot start stream.")
             except Exception as e:
-                self._logger.error("Error getting streamer info, cannot start stream.")
                 self._logger.error(e)
-                return
-
-            if self._streamer_info is None:
-                self._logger.warning(f"Streamer info unavailable, retrying in {self._backoff_time}s...")
-                await self._wait_for_backoff()
-                continue
+                if self._streamer_info is None:
+                    self._logger.error("Error getting streamer info, cannot start stream.")
+                    return
+                else:
+                    self._logger.warning("Error getting streamer info, but previous streamer info is available, trying to start stream with previous streamer info.")
 
             start_time = datetime.datetime.now(datetime.timezone.utc)
             try:
@@ -116,19 +116,27 @@ class StreamBase:
                             receiver_func(await self._websocket.recv(), **kwargs)
 
             except (websockets.exceptions.ConnectionClosedOK, websockets.exceptions.ConnectionClosed) as e: # "received 1000 (OK); then sent 1000 (OK)", "sent 1000 (OK); no close frame received"
-                self._logger.info(f"Stream connection closed. ({e})")
-                break
+                if e.rcvd is not None and e.rcvd.code == 1000:
+                    self._logger.info(f"Stream connection closed gracefully. ({e})")
+                    break
+                elif self._should_stop:
+                    self._logger.info(f"Stream connection closed during shutdown. ({e})")
+                    break
+                else: # abnormal closure
+                    elapsed = (datetime.datetime.now(datetime.timezone.utc) - start_time).total_seconds()
+                    self._logger.warning(f"Stream connection closed unexpectedly ({e}). Elapsed: {elapsed:.0f}s. Reconnecting in {self._backoff_time}s...")
+                    await self._wait_for_backoff()
             except websockets.exceptions.ConnectionClosedError as e: # lost internet connection
                 elapsed = (datetime.datetime.now(datetime.timezone.utc) - start_time).total_seconds()
                 if elapsed <= 90:
                     self._logger.warning(f"Stream has crashed within 90 seconds, likely no subscriptions, invalid login, or lost connection. Not restarting. {e}")
                     break
                 else:
-                    self._logger.error(f"Stream connection Error. Reconnecting in {self._backoff_time} seconds...")
+                    self._logger.error(f"Stream connection closed error. Reconnecting in {self._backoff_time} seconds...")
                     await self._wait_for_backoff()
             except Exception as e:  # stream has quit unexpectedly, try to reconnect
                 self._logger.error(e)
-                self._logger.warning(f"Stream connection lost to server, reconnecting...")
+                self._logger.warning(f"Stream unknown exception. Reconnecting in {self._backoff_time} seconds...")
                 await self._wait_for_backoff()
             finally:
                 self.active = False
@@ -710,4 +718,3 @@ class StreamAsync(StreamBase):
                 self._logger.error(f"Stream task error on shutdown: {e}")
             finally:
                 self._task = None
-
